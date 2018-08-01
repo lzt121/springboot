@@ -1,0 +1,4 @@
+com\example\mapper\UserMapper.class
+com\example\entity\MyUser.class
+com\example\dao\UserDao.class
+com\example\commom\MybatisConfig.class

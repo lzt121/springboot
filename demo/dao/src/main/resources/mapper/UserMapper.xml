@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同，源代码没有去看，猜测应该是通过"这里的namespace.下边方法的id"来定位方法的 -->
+<mapper namespace="com.example.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.example.entity.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+   		 id, login_name, password
+ 	 </sql>
+    <!-- 若不需要自动返回主键，将useGeneratedKeys="true" keyProperty="id"去掉即可(当然如果不需要自动返回主键，直接用注解即可) -->
+    <insert id="insertUserWithBackId" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+       <![CDATA[
+
+       INSERT INTO tb_user 
+       (
+           login_name,
+           password
+       )
+       VALUES
+       (
+           #{loginName, jdbcType=VARCHAR},
+           #{password, jdbcType=VARCHAR}
+       )
+
+        ]]>
+   </insert>
+    <select id="selectUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from tb_user WHERE ID = #{id,jdbcType=INTEGER}
+    </select>
+      <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+	    delete from tb_user
+	    where id = #{id,jdbcType=INTEGER}
+	  </delete>
+	    <update id="updateByPrimaryKey" parameterType="com.example.entity.User" >
+	    update tb_user
+	      <set >
+		      <if test="loginName != null" >
+		        login_name = #{loginName,jdbcType=VARCHAR},
+		      </if>
+		      <if test="password != null" >
+		        password = #{password,jdbcType=VARCHAR},
+		      </if>
+    	  </set>
+	    where id = #{id,jdbcType=INTEGER}
+	  </update>
+</mapper>
